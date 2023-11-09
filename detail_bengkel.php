@@ -112,7 +112,7 @@ if (isset($_SESSION['data-user'])) {
          <br>
          <div class="row">
             <div class="col-sm-4">
-               <img src="image/<?php echo $id_bengkel ?>.jpg" alt="" width="100%">
+               <img src="superadmin/berkas/<?= $bengkel['image'] ?>" alt="" width="100%">
             </div>
             <div class="col-sm-8">
                <table>
@@ -142,13 +142,21 @@ if (isset($_SESSION['data-user'])) {
                   </tr>
                   <tr>
                      <th width="150px" style="text-align: left">Deskripsi</th>
-                     <td style="text-align: left">: <?= $bengkel['deskripsi'] ?></td>
+                     <td style="text-align: left">:
+                        <?php $id_bengkel = $bengkel['id_bengkel'];
+                        $fasilitas_bengkel = "SELECT * FROM fasilitas_bengkel JOIN fasilitas ON fasilitas_bengkel.id_fasilitas=fasilitas.id_fasilitas WHERE fasilitas_bengkel.id_bengkel='$id_bengkel'";
+                        $dataFB = mysqli_query($konektor, $fasilitas_bengkel);
+                        foreach ($dataFB as $rowFB) {
+                           echo "- " . $rowFB['nama_fasilitas'] . "<br>";
+                        }
+                        ?>
+                     </td>
                   </tr>
                   <tr>
                      <?php
-                     $lok = mysqli_fetch_assoc(mysqli_query($konektor, "SELECT * FROM lokasi, bengkel WHERE bengkel.id_bengkel = lokasi.id_bengkel AND lokasi.id_bengkel = '" . $bengkel['id_bengkel'] . "'"))
+                     $lok = mysqli_fetch_assoc(mysqli_query($konektor, "SELECT * FROM lokasi_bengkel, bengkel WHERE bengkel.id_bengkel = lokasi_bengkel.id_bengkel AND lokasi_bengkel.id_bengkel = '" . $bengkel['id_bengkel'] . "'"))
                      ?>
-                     <th colspan="2" width="150px" style="text-align: left"> <br> <a href="https://www.google.com/maps/place/<?= $lok['latitude'] ?>,<?= $lok['longtitude'] ?>" class="btn btn-primary" style="float: left"> Petunjuk Jalan</a></th>
+                     <th colspan="2" width="150px" style="text-align: left"> <br> <a href="https://www.google.com/maps/place/<?= $lok['latitude'] ?>,<?= $lok['longitude'] ?>" class="btn btn-primary" style="float: left"> Petunjuk Jalan</a></th>
                   </tr>
                </table>
             </div>

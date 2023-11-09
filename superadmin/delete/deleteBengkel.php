@@ -22,6 +22,7 @@ $id = buka(input($_GET['id']));
 
 // menghapus data dari database
 mysqli_query($konektor, "delete from bengkel where id_bengkel='$id'");
+mysqli_query($konektor, "delete from fasilitas_bengkel where id_bengkel='$id'");
 
 // mengalihkan halaman kembali ke index.php
 header("location:../index.php?pesan=hapus");

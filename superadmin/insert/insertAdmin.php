@@ -16,13 +16,13 @@ include '../konektor.php';
 include '../cekInput.php';
 
 // menangkap data yang di kirim dari form
-$nama_admin = input($_POST['nama_admin']);
 $emel = input($_POST['emel']);
 $username = input($_POST['username']);
 $sandi = input($_POST['sandi']);
+$password = password_hash($sandi, PASSWORD_DEFAULT);
 
 //Mencari data di dalam database sesuai dengan inputan yang dimasukan
-$data = mysqli_query($konektor, "select * from admin where username like '$username'");
+$data = mysqli_query($konektor, "select * from admin where email='$username'");
 if (mysqli_num_rows($data) > 0) {   //Data ditemukan
     while ($d = mysqli_fetch_array($data)) {
         //cara 1 kembali kehalaman index dengan mengirimkan pesan
@@ -41,7 +41,7 @@ if (mysqli_num_rows($data) > 0) {   //Data ditemukan
 else {
     echo 'Data tidak ditemukan';
     // menginput data ke database
-    mysqli_query($konektor, "insert into admin values('','$nama_admin','$emel','$username','$sandi')");
+    mysqli_query($konektor, "insert into admin values('','$username','$emel','$password')");
 
     // mengalihkan halaman kembali ke index.php
     header("location:../index.php?pesan=tersimpan");

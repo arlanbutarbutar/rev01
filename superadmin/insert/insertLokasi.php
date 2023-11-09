@@ -19,10 +19,10 @@ include '../cekInput.php';
 $id_bengkel = input($_POST['id_bengkel']);
 $nama_lokasi = input($_POST['nama_lokasi']);
 $latitude = input($_POST['latitude']);
-$longtitude = input($_POST['longtitude']);
+$longitude = input($_POST['longitude']);
 
 // menginput data ke database
-mysqli_query($konektor, "insert into lokasi values('','$id_bengkel','$nama_lokasi','$latitude','$longtitude')");
+mysqli_query($konektor, "insert into lokasi_bengkel values('','$id_bengkel','$nama_lokasi','$latitude','$longitude')");
 
 // mengalihkan halaman kembali ke index.php
 header("location:../index.php?pesan=tersimpan");

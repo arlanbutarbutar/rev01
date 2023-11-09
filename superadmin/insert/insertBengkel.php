@@ -9,16 +9,16 @@ $idBengkels = "SELECT * FROM bengkel ORDER BY id_bengkel DESC LIMIT 1";
 $idBengkel = mysqli_query($konektor, $idBengkels);
 if (mysqli_num_rows($idBengkel) > 0) {
    $row = mysqli_fetch_assoc($idBengkel);
-   $id = $row['id_bengkel'] + 1;
+   $lastID_bengkel = $row['id_bengkel'] + 1;
 } else {
-   $id = 1;
+   $lastID_bengkel = 1;
 }
 $path = "../berkas/";
 $fileName = basename($_FILES["file_bengkel"]["name"]);
 $fileName = str_replace(" ", "-", $fileName);
 $ekstensiGambar = explode('.', $fileName);
 $ekstensiGambar = strtolower(end($ekstensiGambar));
-$imageUploadPath = $path . $id . ".jpg";
+$imageUploadPath = $path . $fileName;
 $fileType = pathinfo($imageUploadPath, PATHINFO_EXTENSION);
 $allowTypes = array('jpg', 'png', 'jpeg');
 if (in_array($fileType, $allowTypes)) {
@@ -38,7 +38,12 @@ $jam_tutup = $_POST['jam_tutup'];
 $deskripsi = $_POST['deskripsi'];
 
 // menginput data ke database
-mysqli_query($konektor, "INSERT INTO bengkel(id_bengkel,nama_bengkel,nama_pemilik,no_hp,alamat,jam_buka,jam_tutup,deskripsi) VALUES('$id','$nama_bengkel','$nama_pemilik','$no_hp','$alamat','$jam_buka','$jam_tutup','$deskripsi')");
+mysqli_query($konektor, "INSERT INTO bengkel(id_bengkel,image,nama_bengkel,nama_pemilik,no_hp,alamat,jam_buka,jam_tutup) VALUES('$lastID_bengkel','$fileName','$nama_bengkel','$nama_pemilik','$no_hp','$alamat','$jam_buka','$jam_tutup')");
+if (!empty($deskripsi)) {
+   for ($x = 0; $x < count($deskripsi); $x++) {
+      mysqli_query($konektor, "INSERT INTO fasilitas_bengkel(id_fasilitas,id_bengkel) VALUES('$deskripsi[$x]','$lastID_bengkel')");
+   }
+}
 
 // mengalihkan halaman kembali ke index.php
 header("location:../index.php?pesan=tersimpan");

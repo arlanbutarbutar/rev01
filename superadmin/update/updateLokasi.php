@@ -19,10 +19,10 @@ $id_lokasi = input($_POST['id_lokasi']);
 $id_bengkel = input($_POST['id_bengkel']);
 $nama_lokasi = input($_POST['nama_lokasi']);
 $latitude = input($_POST['latitude']);
-$longtitude = input($_POST['longtitude']);
+$longitude = input($_POST['longitude']);
 
 // update data ke database
-mysqli_query($konektor, "update lokasi set id_bengkel='$id_bengkel', nama_lokasi='$nama_lokasi', latitude='$latitude', longtitude='$longtitude' where id_lokasi='$id_lokasi'");
+mysqli_query($konektor, "update lokasi_bengkel set id_bengkel='$id_bengkel', nama_lokasi='$nama_lokasi', latitude='$latitude', longitude='$longitude' where id_lokasi='$id_lokasi'");
 
 // mengalihkan halaman kembali ke index.php
 header("location:../index.php?pesan=ubah");

@@ -118,7 +118,7 @@ if (isset($_SESSION['data-user'])) {
             <div class="row">
                <div class="col-sm-8"><input type="text" id="myFilter" class="form-control" onkeyup="myFunction()" placeholder="Pencarian berdasarkan nama bengkel / nama tempat"></div>
                <div class="col-sm-2"><a href="https://www.google.com/maps/search/tambal+ban+terdekat/@-10.1650088,123.6292933,13.75z" class="btn btn-primary" target="_blank">Bengkel Terdekat</a></div>
-               <div class="col-sm-2"><a href="peta/index.html" class="btn btn-primary" target="_blank">Peta</a></div>
+               <div class="col-sm-2"><a href="map" class="btn btn-primary">Peta</a></div>
             </div>
          </div>
          <!-- card Nyaris -->
@@ -135,7 +135,7 @@ if (isset($_SESSION['data-user'])) {
                      $file = $r['id_bengkel'];
                      if (file_exists("superadmin/berkas/$file.jpg")) {
                      ?>
-                        <div class="w-100" style="height: 200px; background-image: url('superadmin/berkas/<?php echo $r['id_bengkel']; ?>.jpg'); background-position: top; background-size: 100%;">
+                        <div class="w-100" style="height: 200px; background-image: url('superadmin/berkas/<?= $r['image']; ?>'); background-position: top; background-size: 100%;">
                         </div>
                      <?php
                      } else { ?>

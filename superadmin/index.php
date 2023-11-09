@@ -50,6 +50,10 @@ if (isset($_SESSION["time-message"])) {
   <script type="text/javascript" src="chartjs294/Chart.js"></script>
   <script src="../assets/sweetalert/dist/sweetalert2.all.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/leaflet/leaflet.css">
+  <script src="../assets/leaflet/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
   <style>
     .swing-in-top-fwd {
       -webkit-animation: swing-in-top-fwd 4s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
@@ -120,21 +124,24 @@ if (isset($_SESSION["time-message"])) {
     <div class="message-danger" data-message-danger="<?= $_SESSION["message-danger"] ?>"></div>
   <?php } ?>
   <nav class="navbar fixed-top navbar-expand-md bg-info navbar-info">
-    <img src="../image/logo.png" width="20px" height="20px">
-    <a class="navbar-brand text-light font-weight-bolder " href="#">Tambal Ban Online</a>
+    <!-- <img src="../image/logo.png" width="20px" height="20px"> -->
+    <a class="navbar-brand text-light font-weight-bolder " href="./">Tambal Ban Online</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link text-light font-weight-bolder " href="#" data-toggle="modal" data-target="#myModalAdmin"><i class="bi bi-person"></i> Admin</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light font-weight-bolder " href="#" data-toggle="modal" data-target="#myModalFasilitas"><i class="bi bi-list-stars"></i> Fasilitas</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-light font-weight-bolder " href="#" data-toggle="modal" data-target="#myModalLokasi">
             <i class="bi bi-geo-alt"></i> Lokasi
             <span class="badge badge-primary">
-              <?php $datab1 = mysqli_query($konektor, "select count(id_lokasi) as jumlah from lokasi");
+              <?php $datab1 = mysqli_query($konektor, "select count(id_lokasi) as jumlah from lokasi_bengkel");
               if (mysqli_num_rows($datab1) > 0) {
                 while ($db1 = mysqli_fetch_array($datab1)) {
                   echo $db1['jumlah'];
@@ -172,47 +179,49 @@ if (isset($_SESSION["time-message"])) {
   <div class="container">
     <div class="row">
       <div class="col-md-6">
+
         <!--konten kolom 1 -->
         <div class="row mt-5">
           <div class="col-md-12 mt-5">
             <div class="alert alert-warning swing-in-top-fwd font-weight-bold">
-              <?php
-              echo "Selamat Datang " . $_SESSION['data-user']['username']; //Berhasil Login 
-              ?>
+              <?= "Selamat Datang " . $_SESSION['data-user']['username']; ?>
             </div>
           </div>
         </div>
+
         <?php
         //notifikasi pesan 
         if (isset($_GET['pesan'])) {
           if ($_GET['pesan'] == "tersimpan") { ?>
             <div class="row">
               <div class="col-sm-12">
-                <div class="alert alert-success swing-in-top-fwd"> <i style='font-size:24px' class='fas'>&#xf00c;</i> <?php
-                                                                                                                      echo "Data baru telah disimpan"; ?> </div>
+                <div class="alert alert-success swing-in-top-fwd">
+                  <?= "Data baru telah disimpan"; ?>
+                </div>
               </div>
             </div>
           <?php } else if ($_GET['pesan'] == "ubah") {  ?>
             <div class="row">
               <div class="col-sm-12">
-                <div class="alert alert-primary swing-in-top-fwd"> <i style='font-size:20px' class='far'>&#xf059;</i> <?php
-                                                                                                                      echo "Data yang Anda pilih telah diubah";
-                                                                                                                      ?> </div>
+                <div class="alert alert-primary swing-in-top-fwd">
+                  <?= "Data yang Anda pilih telah diubah"; ?>
+                </div>
               </div>
             </div>
           <?php } else if ($_GET['pesan'] == "hapus") { ?>
             <div class="row">
               <div class="col-sm-12">
-                <div class="alert alert-danger swing-in-top-fwd"> <i style='font-size:20px' class='fas'>&#xf057;</i> <?php
-                                                                                                                      echo "Data yang Anda pilih telah dihapus";  ?> </div>
+                <div class="alert alert-danger swing-in-top-fwd">
+                  <?= "Data yang Anda pilih telah dihapus";  ?>
+                </div>
               </div>
             </div>
           <?php } else if ($_GET['pesan'] == "duplikat") { ?>
             <div class="row">
               <div class="col-sm-12">
-                <div class="alert alert-danger swing-in-top-fwd"> <i style='font-size:20px' class='fas'>&#xf057;</i> <?php
-                                                                                                                      echo "maaf, data tidak disimpan karena terjadi duplikasi pada atribut Username, silahkan masukan Username yang baru";
-                                                                                                                      ?> </div>
+                <div class="alert alert-danger swing-in-top-fwd">
+                  <?= "maaf, data tidak disimpan karena terjadi duplikasi pada atribut Username, silahkan masukan Username yang baru"; ?>
+                </div>
               </div>
             </div>
           <?php } else if ($_GET['pesan'] == "fileterkirim") {
@@ -245,6 +254,7 @@ if (isset($_SESSION["time-message"])) {
             </div>
         <?php }
         } ?>
+
         <!-- The Modal Display Admin -->
         <div class="modal fade" id="myModalAdmin">
           <div class="modal-dialog modal-xl">
@@ -252,15 +262,15 @@ if (isset($_SESSION["time-message"])) {
 
               <!-- Modal Header -->
               <div class="modal-header" style="background-color: #47AFAF;">
-                <h4 class="modal-title text-light"><i style='font-size:24px' class='fas'>&#xf2bd;</i> Daftar Admin</h4>
+                <h4 class="modal-title text-light">Daftar Admin</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
 
               <!-- Modal body -->
               <div class="modal-body">
-                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#myModalTDA"><i style='font-size:20px' class='fas'>&#xf0fe;</i> </a>
-                <a href="report/lapAdminSeluruh.php" target="_blank" class="btn btn-success"><i style='font-size:20px' class='fas'>&#xf1c1;</i> </a>
-                <a href="excel/eAdmin.php" class="btn btn-success"> <i style='font-size:20px' class='far'>&#xf1c3;</i> </a> <br><br>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModalTDA"><i class="bi bi-plus-lg"></i></a>
+                <a href="report/lapAdminSeluruh.php" target="_blank" class="btn btn-info"><i class="bi bi-file-earmark-pdf"></i></a>
+                <a href="excel/eAdmin.php" class="btn btn-success"><i class="bi bi-download"></i></a> <br><br>
                 <input class="form-control" id="myInputAdmin" type="text" placeholder="Cari..">
                 <br>
                 <div class="table-responsive">
@@ -268,10 +278,8 @@ if (isset($_SESSION["time-message"])) {
                     <thead>
                       <tr>
                         <th>NO</th>
-                        <th>Nama</th>
-                        <th>Email</th>
                         <th>Username</th>
-                        <th>Sandi</th>
+                        <th>Email</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
@@ -283,13 +291,11 @@ if (isset($_SESSION["time-message"])) {
                       ?>
                         <tr>
                           <td><?= $no++; ?></td>
-                          <td><?php echo $d['nama_admin']; ?></td>
-                          <td><?php echo $d['emel']; ?></td>
-                          <td><?php echo $d['username']; ?></td>
-                          <td><?php echo $d['sandi']; ?></td>
+                          <td><?= $d['username']; ?></td>
+                          <td><?= $d['email']; ?></td>
                           <td>
-                            <a href="#" data-toggle="modal" data-target="#myModalUDA<?php echo $d['id_admin']; ?>"><i style='font-size:14px' class='fas'>&#xf044;</i></a>
-                            <a onclick="return confirm('Yakin ingin menghapus data sekarang?');" href="delete/deleteAdmin.php?id=<?php echo kunci($d['id_admin']); ?>"><i style='font-size:14px' class='fas'>&#xf1f8;</i></a>
+                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#myModalUDA<?= $d['id_admin']; ?>"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data sekarang?');" href="delete/deleteAdmin.php?id=<?= kunci($d['id_admin']); ?>"><i class="bi bi-trash3"></i></a>
 
                           </td>
                         </tr>
@@ -312,21 +318,6 @@ if (isset($_SESSION["time-message"])) {
                                 <form onsubmit="return confirm('Yakin ingin mengubah data sekarang?');" method="post" action="update/updateAdmin.php">
                                   <!--Hidden Field idadmin -->
                                   <input type="hidden" name="id_admin" value="<?php echo $d['id_admin']; ?>">
-                                  <!-- Edit Text Field-->
-                                  <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">Nama Admin</span>
-                                    </div>
-                                    <input pattern="[A-Za-z ]+" type="text" class="form-control" required name="nama_admin" value="<?php echo $d['nama_admin']; ?>">
-                                  </div>
-
-                                  <!-- Edit Text Field-->
-                                  <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">Email</span>
-                                    </div>
-                                    <input type="text" class="form-control" required name="emel" value="<?php echo $d['emel']; ?>">
-                                  </div>
 
                                   <!-- Edit Text Field-->
                                   <div class="input-group mb-2">
@@ -339,9 +330,17 @@ if (isset($_SESSION["time-message"])) {
                                   <!-- Edit Text Field-->
                                   <div class="input-group mb-2">
                                     <div class="input-group-prepend">
+                                      <span class="input-group-text">Email</span>
+                                    </div>
+                                    <input type="text" class="form-control" required name="emel" value="<?php echo $d['email']; ?>">
+                                  </div>
+
+                                  <!-- Edit Text Field-->
+                                  <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
                                       <span class="input-group-text">Sandi</span>
                                     </div>
-                                    <input type="password" class="form-control" required name="sandi" value="<?php echo $d['sandi']; ?>">
+                                    <input type="password" class="form-control" required name="sandi" value="12345678">
                                   </div>
 
                                   <!-- Akhir form ubah data -->
@@ -390,7 +389,7 @@ if (isset($_SESSION["time-message"])) {
 
               <!-- Modal Header -->
               <div class="modal-header">
-                <h4 class="modal-title"><i style='font-size:20px' class='fas'>&#xf0fe;</i> Tambah Data Admin </h4>
+                <h4 class="modal-title"> Tambah Data Admin </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
 
@@ -398,13 +397,6 @@ if (isset($_SESSION["time-message"])) {
               <div class="modal-body">
 
                 <form method="post" action="insert/insertAdmin.php">
-                  <!-- Input Text Field-->
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Nama Admin</span>
-                    </div>
-                    <input pattern="[A-Za-z ]+" type="text" class="form-control" required name="nama_admin">
-                  </div>
                   <!-- Input Text Field-->
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
@@ -438,63 +430,55 @@ if (isset($_SESSION["time-message"])) {
           </div>
         </div>
 
-        <!-- The Modal Display Lokasi -->
-        <div class="modal fade" id="myModalLokasi">
+        <!-- The Modal Display Admin -->
+        <div class="modal fade" id="myModalFasilitas">
           <div class="modal-dialog modal-xl">
             <div class="modal-content">
 
               <!-- Modal Header -->
               <div class="modal-header" style="background-color: #47AFAF;">
-                <h4 class="modal-title text-light"><i style='font-size:24px' class='fas'>&#xf1de;</i> Daftar Lokasi</h4>
+                <h4 class="modal-title text-light">Data Fasilitas Bengkel</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
 
               <!-- Modal body -->
               <div class="modal-body">
-                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#myModalTDK"><i style='font-size:20px' class='fas'>&#xf0fe;</i> </a>
-                <a href="report/lapKategoriSeluruh.php" target="_blank" class="btn btn-success"><i style='font-size:20px' class='fas'>&#xf1c1;</i> </a>
-                <a href="excel/eKategori.php" class="btn btn-success"> <i style='font-size:20px' class='far'>&#xf1c3;</i> </a>
-                <br><br>
-                <input class="form-control" id="myInputKategori" type="text" placeholder="Cari..">
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModalTDF"><i class="bi bi-plus-lg"></i></a>
+                <input class="form-control" id="myInputAdmin" type="text" placeholder="Cari..">
                 <br>
                 <div class="table-responsive">
-                  <table class="table table-striped table-hover table-sm" id="myTableKategori">
+                  <table class="table table-striped table-hover table-sm" id="myTableAdmin">
                     <thead>
                       <tr>
-                        <th>No</th>
-                        <th>Nama Bengkel</th>
-                        <th>Nama Lokasi</th>
-                        <th> Latitude</th>
-                        <th> Longtitude</th>
+                        <th>NO</th>
+                        <th>Fasilitas</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
                       $no = 1;
-                      $data = mysqli_query($konektor, "SELECT lokasi.id_lokasi,lokasi.id_bengkel,bengkel.nama_bengkel,lokasi.nama_lokasi,lokasi.latitude,lokasi.longtitude FROM lokasi, bengkel WHERE lokasi.id_bengkel = bengkel.id_bengkel");
+                      $data = mysqli_query($konektor, "select * from fasilitas");
                       while ($d = mysqli_fetch_array($data)) {
                       ?>
                         <tr>
                           <td><?= $no++; ?></td>
-                          <td><?php echo $d['nama_bengkel']; ?></td>
-                          <td><?php echo $d['nama_lokasi']; ?></td>
-                          <td><?php echo $d['latitude']; ?></td>
-                          <td><?php echo $d['longtitude']; ?></td>
+                          <td><?= $d['nama_fasilitas']; ?></td>
                           <td>
-                            <a href="#" data-toggle="modal" data-target="#myModalUDK<?php echo $d['id_lokasi']; ?>"><i style='font-size:14px' class='fas'>&#xf044;</i></a>
-                            <a onclick="return confirm('Yakin ingin menghapus data sekarang?');" href="delete/deleteLokasi.php?id=<?php echo kunci($d['id_lokasi']); ?>"><i style='font-size:14px' class='fas'>&#xf1f8;</i></a>
+                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#myModalUDF<?= $d['id_fasilitas']; ?>"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data sekarang?');" href="delete/deleteFasilitas.php?id=<?= kunci($d['id_fasilitas']); ?>"><i class="bi bi-trash3"></i></a>
+
                           </td>
                         </tr>
 
-                        <!-- The Modal Ubah Data Lokasi -->
-                        <div class="modal fade" id="myModalUDK<?php echo $d['id_lokasi']; ?>">
-                          <div class="modal-dialog modal-md">
+                        <!-- The Modal Ubah Data Admin -->
+                        <div class="modal fade" id="myModalUDF<?php echo $d['id_fasilitas']; ?>">
+                          <div class="modal-dialog modal-lg">
                             <div class="modal-content">
 
                               <!-- Modal Header -->
                               <div class="modal-header">
-                                <h4 class="modal-title">Ubah Data Lokasi</h4>
+                                <h4 class="modal-title">Ubah Data Fasilitas</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                               </div>
 
@@ -502,49 +486,16 @@ if (isset($_SESSION["time-message"])) {
                               <div class="modal-body">
 
                                 <!-- Form ubah data menyatu dengan form index-->
-                                <form onsubmit="return confirm('Yakin ingin mengubah data sekarang?');" method="post" action="update/updateLokasi.php">
-                                  <!--Hidden Field id_lokasi -->
-                                  <input type="hidden" name="id_lokasi" value="<?php echo $d['id_lokasi']; ?>">
-                                  <!-- Edit List Menu Dinamis-->
-                                  <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">Nama Bengkel</span>
-                                    </div>
-                                    <?php
-                                    $data1 = mysqli_query($konektor, "select * from bengkel");
-                                    echo "<select class='form-control' required name='id_bengkel'>";
-                                    // Mengambil value dari tabel dan disimpan pada variabel $existingid
-                                    $existingid = $d['id_bengkel'];
-                                    while ($d1 = mysqli_fetch_array($data1)) {
-                                      // cek jika $existingid sama dengan yang dipilih untuk ditampilkan
-                                      if ($existingid == $d1['id_bengkel'])
-                                        echo "<option selected='selected' value='" . $d1['id_bengkel'] . "'>" . $d1['nama_bengkel'] . "</option>";
-                                      else
-                                        echo "<option value='" . $d1['id_bengkel'] . "'>" . $d1['nama_bengkel'] . "</option>";
-                                    }
-                                    echo "</select>";
-                                    ?>
-                                  </div>
+                                <form onsubmit="return confirm('Yakin ingin mengubah data sekarang?');" method="post" action="update/updateFasilitas.php">
+                                  <!--Hidden Field idadmin -->
+                                  <input type="hidden" name="id_fasilitas" value="<?php echo $d['id_fasilitas']; ?>">
+
                                   <!-- Edit Text Field-->
                                   <div class="input-group mb-2">
                                     <div class="input-group-prepend">
-                                      <span class="input-group-text">Nama Lokasi</span>
+                                      <span class="input-group-text">Nama Fasilitas</span>
                                     </div>
-                                    <input type="text" class="form-control" required name="nama_lokasi" value="<?php echo $d['nama_lokasi']; ?>">
-                                  </div>
-                                  <!-- Edit Text Field-->
-                                  <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">Latitude</span>
-                                    </div>
-                                    <input type="text" class="form-control" required name="latitude" value="<?php echo $d['latitude']; ?>">
-                                  </div>
-                                  <!-- Edit Text Field-->
-                                  <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">Longtitude</span>
-                                    </div>
-                                    <input type="text" class="form-control" required name="longtitude" value="<?php echo $d['longtitude']; ?>">
+                                    <input type="text" class="form-control" required name="nama_fasilitas" value="<?php echo $d['nama_fasilitas']; ?>">
                                   </div>
 
                                   <!-- Akhir form ubah data -->
@@ -555,7 +506,6 @@ if (isset($_SESSION["time-message"])) {
                               <div class="modal-footer">
                                 <!-- Input Button-->
                                 <input class="btn btn-success" type="submit" value="Simpan"></form>
-
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
                               </div>
                             </div>
@@ -567,74 +517,184 @@ if (isset($_SESSION["time-message"])) {
                   </table>
                 </div>
 
-                <!-- The Modal Tambah Data Lokasi -->
-                <div class="modal fade" id="myModalTDK">
-                  <div class="modal-dialog modal-md">
-                    <div class="modal-content">
+                <script>
+                  $(document).ready(function() {
+                    $("#myInputAdmin").on("keyup", function() {
+                      var value = $(this).val().toLowerCase();
+                      $("#myTableAdmin tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                      });
+                    });
+                  });
+                </script>
+              </div>
 
-                      <!-- Modal Header -->
-                      <div class="modal-header">
-                        <h4 class="modal-title"><i style='font-size:20px' class='fas'>&#xf0fe;</i> Tambah Data Lokasi</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                      <!-- Modal body -->
-                      <div class="modal-body">
-                        <form method="post" action="insert/insertLokasi.php">
-                          <!-- Edit List Menu Dinamis-->
-                          <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Nama Bengkel</span>
-                            </div>
-                            <?php
-                            $data1 = mysqli_query($konektor, "select * from bengkel");
-                            echo "<select class='form-control' required name='id_bengkel'>";
-                            // Mengambil value dari tabel dan disimpan pada variabel $existingid
-                            $existingid = $d['id_bengkel'];
-                            while ($d1 = mysqli_fetch_array($data1)) {
-                              // cek jika $existingid sama dengan yang dipilih untuk ditampilkan
-                              if ($existingid == $d1['id_bengkel'])
-                                echo "<option selected='selected' value='" . $d1['id_bengkel'] . "'>" . $d1['nama_bengkel'] . "</option>";
-                              else
-                                echo "<option value='" . $d1['id_bengkel'] . "'>" . $d1['nama_bengkel'] . "</option>";
-                            }
-                            echo "</select>";
-                            ?>
-                          </div>
-                          <!-- Input Text Field-->
-                          <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Nama Lokasi</span>
-                            </div>
-                            <input type="text" class="form-control" required name="nama_lokasi">
-                          </div>
-                          <!-- Input Text Field-->
-                          <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Latitude</span>
-                            </div>
-                            <input type="text" class="form-control" required name="latitude">
-                          </div>
-                          <!-- Input Text Field-->
-                          <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Longtitude</span>
-                            </div>
-                            <input type="text" class="form-control" required name="longtitude">
-                          </div>
-                      </div>
+        <!-- The Modal Tambah Data Admin -->
+        <div class="modal fade" id="myModalTDF">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content">
 
-                      <!-- Modal footer -->
-                      <div class="modal-footer">
-                        <!-- Input Button-->
-                        <input class="btn btn-success" type="submit" value="Simpan"></form>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                      </div>
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title"> Tambah Data Fasilitas </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+
+                <form method="post" action="insert/insertFasilitas.php">
+                  <!-- Input Text Field-->
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Nama Fasilitas</span>
                     </div>
+                    <input type="text" class="form-control" required name="nama_fasilitas">
                   </div>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <!-- Input Button-->
+                <input class="btn btn-success" type="submit" value="Simpan"></form>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Modal Display Lokasi -->
+        <div class="modal fade" id="myModalLokasi">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header" style="background-color: #47AFAF;">
+                <h4 class="modal-title text-light">Daftar Lokasi</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <a href="add_lokasi" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
+                <br><br>
+                <input class="form-control" id="myInputKategori" type="text" placeholder="Cari..">
+                <br>
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover table-sm" id="myTableKategori">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Nama Bengkel</th>
+                        <th>Nama Lokasi</th>
+                        <th>Latitude</th>
+                        <th>Longtitude</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      $no = 1;
+                      $data = mysqli_query($konektor, "SELECT lokasi_bengkel.*, bengkel.nama_bengkel FROM lokasi_bengkel JOIN bengkel ON lokasi_bengkel.id_bengkel=bengkel.id_bengkel ORDER BY lokasi_bengkel.id_lokasi DESC");
+                      while ($d = mysqli_fetch_array($data)) {
+                      ?>
+                        <tr>
+                          <td><?= $no++; ?></td>
+                          <td><?= $d['nama_bengkel']; ?></td>
+                          <td><?= $d['nama_lokasi']; ?></td>
+                          <td><?= $d['latitude']; ?></td>
+                          <td><?= $d['longitude']; ?></td>
+                          <td>
+                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#myModalUDK<?php echo $d['id_lokasi']; ?>"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data sekarang?');" href="delete/deleteLokasi.php?id=<?php echo kunci($d['id_lokasi']); ?>"><i class="bi bi-trash3"></i></a>
+                          </td>
+
+                          <!-- The Modal Ubah Data Lokasi -->
+                          <div class="modal fade" id="myModalUDK<?php echo $d['id_lokasi']; ?>">
+                            <div class="modal-dialog modal-md">
+                              <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Ubah Data Lokasi</h4>
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+
+                                  <!-- Form ubah data menyatu dengan form index-->
+                                  <form onsubmit="return confirm('Yakin ingin mengubah data sekarang?');" method="post" action="update/updateLokasi.php">
+                                    <!--Hidden Field id_lokasi -->
+                                    <input type="hidden" name="id_lokasi" value="<?php echo $d['id_lokasi']; ?>">
+                                    <!-- Edit List Menu Dinamis-->
+                                    <div class="input-group mb-2">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">Nama Bengkel</span>
+                                      </div>
+                                      <?php
+                                      $data1 = mysqli_query($konektor, "select * from bengkel");
+                                      echo "<select class='form-control' required name='id_bengkel'>";
+                                      // Mengambil value dari tabel dan disimpan pada variabel $existingid
+                                      $existingid = $d['id_bengkel'];
+                                      while ($d1 = mysqli_fetch_array($data1)) {
+                                        // cek jika $existingid sama dengan yang dipilih untuk ditampilkan
+                                        if ($existingid == $d1['id_bengkel'])
+                                          echo "<option selected='selected' value='" . $d1['id_bengkel'] . "'>" . $d1['nama_bengkel'] . "</option>";
+                                        else
+                                          echo "<option value='" . $d1['id_bengkel'] . "'>" . $d1['nama_bengkel'] . "</option>";
+                                      }
+                                      echo "</select>";
+                                      ?>
+                                    </div>
+                                    <!-- Edit Text Field-->
+                                    <div class="input-group mb-2">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">Nama Lokasi</span>
+                                      </div>
+                                      <input type="text" class="form-control" required name="nama_lokasi" value="<?php echo $d['nama_lokasi']; ?>">
+                                    </div>
+                                    <!-- Edit Text Field-->
+                                    <div class="input-group mb-2">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">Latitude</span>
+                                      </div>
+                                      <input type="text" class="form-control" required name="latitude" value="<?php echo $d['latitude']; ?>">
+                                    </div>
+                                    <!-- Edit Text Field-->
+                                    <div class="input-group mb-2">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">Longitude</span>
+                                      </div>
+                                      <input type="text" class="form-control" required name="longitude" value="<?php echo $d['longitude']; ?>">
+                                    </div>
+
+                                    <!-- Akhir form ubah data -->
+
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                  <!-- Input Button-->
+                                  <input class="btn btn-success" type="submit" value="Simpan"></form>
+
+                                  <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <?php } ?>
+                    </tbody>
+                  </table>
                 </div>
-
-
 
                 <script>
                   $(document).ready(function() {
@@ -650,7 +710,7 @@ if (isset($_SESSION["time-message"])) {
 
               <!-- Modal footer -->
               <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>
               </div>
             </div>
           </div>
@@ -669,9 +729,7 @@ if (isset($_SESSION["time-message"])) {
 
               <!-- Modal body -->
               <div class="modal-body">
-                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#myModalTDW"><i class="bi bi-plus-lg"></i></a>
-                <a href="report/lapWisatawan.php" target="_blank" class="btn btn-success"><i class="bi bi-file-earmark-pdf"></i></a>
-                <a href="excel/eWisatawan.php" class="btn btn-success"><i class="bi bi-download"></i></a>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModalTDW"><i class="bi bi-plus-lg"></i></a>
                 <br><br>
                 <input class="form-control" id="myInputWisatawan" type="text" placeholder="Cari..">
                 <br>
@@ -693,13 +751,13 @@ if (isset($_SESSION["time-message"])) {
                     <tbody>
                       <?php
                       $no = 1;
-                      $data = mysqli_query($konektor, "select * from bengkel");
+                      $data = mysqli_query($konektor, "SELECT * FROM bengkel");
                       while ($d = mysqli_fetch_array($data)) {
                       ?>
                         <tr>
                           <td><?= $no++; ?></td>
                           <td>
-                            <a href="berkas/<?= $d['id_bengkel']; ?>.jpg" target="blank"><img class="swing-in-top-fwd" src="berkas/<?= $d['id_bengkel']; ?>.jpg" width="70" height="70" /></a>
+                            <a href="berkas/<?= $d['image']; ?>" target="blank"><img class="swing-in-top-fwd" src="berkas/<?= $d['image']; ?>" width="70" height="70" /></a>
                             <?= $d['nama_bengkel']; ?>
                           </td>
                           <td><?= $d['nama_pemilik']; ?></td>
@@ -707,7 +765,15 @@ if (isset($_SESSION["time-message"])) {
                           <td><?= $d['alamat']; ?></td>
                           <td><?= $d['jam_buka']; ?></td>
                           <td><?= $d['jam_tutup']; ?></td>
-                          <td><?= $d['deskripsi']; ?></td>
+                          <td>
+                            <?php $id_bengkel = $d['id_bengkel'];
+                            $fasilitas_bengkel = "SELECT * FROM fasilitas_bengkel JOIN fasilitas ON fasilitas_bengkel.id_fasilitas=fasilitas.id_fasilitas WHERE fasilitas_bengkel.id_bengkel='$id_bengkel'";
+                            $dataFB = mysqli_query($konektor, $fasilitas_bengkel);
+                            foreach ($dataFB as $rowFB) {
+                              echo "- " . $rowFB['nama_fasilitas'] . "<br>";
+                            }
+                            ?>
+                          </td>
                           <td>
                             <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#myModalUDW<?= $d['id_bengkel']; ?>"><i class="bi bi-pencil-square"></i></a>
                           </td>
@@ -747,7 +813,7 @@ if (isset($_SESSION["time-message"])) {
                                     <div class="input-group-prepend">
                                       <span class="input-group-text">Nama Bengkel</span>
                                     </div>
-                                    <input pattern="[A-Za-z ]+" type="text" class="form-control" required name="nama_bengkel" value="<?= $d['nama_bengkel']; ?>">
+                                    <input pattern="[A-Za-z0-9 ]+" type="text" class="form-control" required name="nama_bengkel" value="<?= $d['nama_bengkel']; ?>">
                                   </div>
                                   <!-- Edit Text Field-->
                                   <div class="input-group mb-2">
@@ -791,7 +857,16 @@ if (isset($_SESSION["time-message"])) {
                                     <div class="input-group-prepend">
                                       <span class="input-group-text">Deskripsi</span>
                                     </div>
-                                    <input class="form-control" required type="text" name="deskripsi" value="<?= $d['deskripsi']; ?>">
+                                    <?php $fasilitas = "SELECT * FROM fasilitas";
+                                    $data_fasilitas = mysqli_query($konektor, $fasilitas);
+                                    foreach ($data_fasilitas as $rowF) { ?>
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="deskripsi[]" value="<?= $rowF['id_fasilitas'] ?>" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                          <?= $rowF['nama_fasilitas'] ?>
+                                        </label>
+                                      </div>
+                                    <?php } ?>
                                   </div>
                                   <!-- Akhir form ubah data -->
 
@@ -814,12 +889,12 @@ if (isset($_SESSION["time-message"])) {
 
                 <!-- The Modal Tambah Data Bengkel-->
                 <div class="modal fade" id="myModalTDW">
-                  <div class="modal-dialog modal-md">
+                  <div class="modal-dialog modal-xl">
                     <div class="modal-content">
 
                       <!-- Modal Header -->
                       <div class="modal-header">
-                        <h4 class="modal-title"><i style='font-size:20px' class='fas'>&#xf0fe;</i> Tambah Data Bengkel </h4>
+                        <h4 class="modal-title">Tambah Data Bengkel </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
 
@@ -839,7 +914,7 @@ if (isset($_SESSION["time-message"])) {
                             <div class="input-group-prepend">
                               <span class="input-group-text">Nama Bengkel</span>
                             </div>
-                            <input pattern="[A-Za-z ]+" type="text" class="form-control" required name="nama_bengkel">
+                            <input pattern="[A-Za-z0-9 ]+" type="text" class="form-control" required name="nama_bengkel">
                           </div>
                           <!-- Input Text Field-->
                           <div class="input-group mb-2">
@@ -884,7 +959,16 @@ if (isset($_SESSION["time-message"])) {
                             <div class="input-group-prepend">
                               <span class="input-group-text">Deskripsi</span>
                             </div>
-                            <input type="text" class="form-control" required name="deskripsi">
+                            <?php $fasilitas = "SELECT * FROM fasilitas";
+                            $data_fasilitas = mysqli_query($konektor, $fasilitas);
+                            foreach ($data_fasilitas as $rowF) { ?>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="deskripsi[]" value="<?= $rowF['id_fasilitas'] ?>" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                  <?= $rowF['nama_fasilitas'] ?>
+                                </label>
+                              </div>
+                            <?php } ?>
                           </div>
                       </div>
 

@@ -16,13 +16,13 @@ include '../cekinput.php';
 
 // menangkap data yang di kirim dari form
 $id_admin = input($_POST['id_admin']);
-$nama_admin = input($_POST['nama_admin']);
 $emel = input($_POST['emel']);
 $username = input($_POST['username']);
 $sandi = input($_POST['sandi']);
+$password = password_hash($sandi, PASSWORD_DEFAULT);
 
 // update data ke database
-mysqli_query($konektor, "update admin set nama_admin='$nama_admin', emel='$emel', username='$username', sandi='$sandi' where id_admin='$id_admin'");
+mysqli_query($konektor, "update admin set email='$emel', username='$username', password='$sandi' where id_admin='$id_admin'");
 
 // mengalihkan halaman kembali ke index.php
 header("location:../index.php?pesan=ubah");
