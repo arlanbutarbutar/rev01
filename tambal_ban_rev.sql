@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Nov 2023 pada 03.07
+-- Waktu pembuatan: 09 Nov 2023 pada 13.47
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -64,21 +64,21 @@ CREATE TABLE `bengkel` (
 --
 
 INSERT INTO `bengkel` (`id_bengkel`, `image`, `nama_bengkel`, `nama_pemilik`, `no_hp`, `alamat`, `jam_buka`, `jam_tutup`) VALUES
-(1, '', 'UMKM Gilang Pratama', 'unname', '08113827421', 'Jalan W.J. Lalamentik No.95', '16:54:00', '20:54:00'),
-(2, '', 'Tambal Ban Om Semy', 'unname', '08113827421', 'Jalan W.J. Lalamentik No.95', '16:54:00', '20:54:00'),
-(3, '', 'Tambal Ban Sebelum Jurusan Kesehatan Lingkungan ', 'unname', '08113827421', 'Liliba', '16:54:00', '20:54:00'),
-(4, '', 'Tambal Ban Bundaran PU', 'unname', '08113827421', 'Bundaran PU', '16:54:00', '20:54:00'),
-(5, '', 'Tambal Ban Bundaran PU Sesudah Hotel Amaris', 'unname', '08113827421', 'Bundaran PU Sesudah Hotel Amaris', '16:54:00', '20:54:00'),
-(6, '', 'Tambal Ban Sebelum Hotel Amaris', 'unname', '08113827421', 'Sebelum Hotel Amaris', '16:54:00', '20:54:00'),
-(7, '', 'Bengkel Tofa Jln Amabi', 'unname', '08113827421', 'Tofa Jln Amabi', '16:54:00', '20:54:00'),
-(8, '', 'Tambal Ban Idaman ', 'unname', '08113827421', 'Jln Samratulangi Kec Kelapa 5', '16:54:00', '20:54:00'),
-(9, '', 'Bengkel Tambal Ban', 'unname', '08113827421', 'Oesapa Barat', '16:54:00', '20:54:00'),
-(10, '', 'Tambal Ban Putra', 'unname', '08113827421', 'Jalan W.J. Lalamentik No.95', '16:54:00', '20:54:00'),
-(11, '', 'Bengkel Tambal Ban Kayu Putih', 'unname', '08113827421', 'Kayu Putih', '16:54:00', '20:54:00'),
-(12, '', 'Tambal Ban Pojok Walikota', 'unname', '08113827421', 'Walikota', '16:54:00', '20:54:00'),
-(13, '', 'Bengkel Tambal Ban Ama Rai ', 'unname', '08113827421', 'Jln. Thamrin', '16:54:00', '20:54:00'),
-(14, '', 'Tambal Ban Senator Jaya ', 'unname', '08113827421', 'Fatululi, Kec Oebobo', '16:54:00', '20:54:00'),
-(15, '', 'Tambal Ban Rasta ', 'unname', '08113827421', 'Tarus', '16:54:00', '20:54:00');
+(1, 'WhatsApp-Image-2023-11-09-at-20.11.36.jpeg', 'UMKM Gilang Pratama', 'unname', '08113827421', '-', '16:54:00', '20:54:00'),
+(2, 'WhatsApp-Image-2023-11-09-at-20.05.40-(1).jpeg', 'Tambal Ban Om Semy', 'unname', '08113827421', 'Jalan W.J. Lalamentik No.95', '16:54:00', '20:54:00'),
+(3, 'WhatsApp-Image-2023-11-09-at-20.05.40.jpeg', 'Tambal Ban Sebelum Jurusan Kesehatan Lingkungan', 'unname', '08113827421', 'Liliba', '16:54:00', '20:54:00'),
+(4, 'WhatsApp-Image-2023-11-09-at-20.08.52-(1).jpeg', 'Tambal Ban Bundaran PU', 'unname', '08113827421', 'Bundaran PU', '16:54:00', '20:54:00'),
+(5, 'WhatsApp-Image-2023-11-09-at-20.17.42.jpeg', 'Tambal Ban Bundaran PU Sesudah Hotel Amaris', 'unname', '08113827421', 'Bundaran PU Sesudah Hotel Amaris', '16:54:00', '20:54:00'),
+(6, 'WhatsApp-Image-2023-11-09-at-20.08.52.jpeg', 'Tambal Ban Sebelum Hotel Amaris', 'unname', '08113827421', 'Sebelum Hotel Amaris', '16:54:00', '20:54:00'),
+(7, 'WhatsApp-Image-2023-11-09-at-20.13.13.jpeg', 'Bengkel Tofa Jln Amabi', 'unname', '08113827421', 'Tofa Jln Amabi', '16:54:00', '20:54:00'),
+(8, 'WhatsApp-Image-2023-11-09-at-20.14.23.jpeg', 'Tambal Ban Idaman', 'unname', '08113827421', 'Jln Samratulangi Kec Kelapa 5', '16:54:00', '20:54:00'),
+(9, 'WhatsApp-Image-2023-11-09-at-20.05.40-(2).jpeg', 'Bengkel Tambal Ban', 'unname', '08113827421', 'Oesapa Barat', '16:54:00', '20:54:00'),
+(10, 'WhatsApp-Image-2023-11-09-at-20.10.42.jpeg', 'Tambal Ban Putra', 'unname', '08113827421', 'jalan amabi', '16:54:00', '20:54:00'),
+(11, 'WhatsApp-Image-2023-11-09-at-20.08.51.jpeg', 'Bengkel Tambal Ban Kayu Putih', 'unname', '08113827421', 'Kayu Putih', '16:54:00', '20:54:00'),
+(12, 'WhatsApp-Image-2023-11-09-at-20.05.08.jpeg', 'Tambal Ban Pojok Walikota', 'unname', '08113827421', 'Walikota', '16:54:00', '20:54:00'),
+(13, 'WhatsApp-Image-2023-11-09-at-20.06.51.jpeg', 'Bengkel Tambal Ban Ama Rai', 'unname', '08113827421', 'Jln. Thamrin', '16:54:00', '20:54:00'),
+(14, 'WhatsApp-Image-2023-11-09-at-20.19.39.jpeg', 'Tambal Ban Senator Jaya', 'unname', '08113827421', 'Fatululi, Kec Oebobo', '16:54:00', '20:54:00'),
+(15, 'WhatsApp-Image-2023-11-09-at-20.07.16.jpeg', 'Tambal Ban Rasta', 'unname', '08113827421', 'Tarus', '16:54:00', '20:54:00');
 
 -- --------------------------------------------------------
 
