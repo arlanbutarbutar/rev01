@@ -1045,7 +1045,12 @@ if (isset($_SESSION["time-message"])) {
                   </div>
                   <input type="text" class="form-control" id="add_longitude" required name="longitude">
                 </div>
+                <div class="input-group mb-2">
+                  <button class="btn btn-primary" type="submit">Simpan</button>
+                  <a href="./" class="btn btn-secondary ml-2" data-dismiss="modal">Kembali</a>
+                </div>
               </div>
+            </form>
           </div>
           <div class="col-lg-8">
             <div class="card-body py-4">
